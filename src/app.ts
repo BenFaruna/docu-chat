@@ -5,6 +5,8 @@ import helmet from 'helmet';
 import { logger } from './lib/logger';
 import { config } from './lib/config';
 
+import './events/auth.events';
+
 const app = express();
 
 app.use(helmet());              // Security headers
