@@ -1,46 +1,16 @@
-// src/routes/auth.ts
 import { Router } from 'express';
-import * as authService from '../services/auth.service';
+import { register, login, refresh, logout } from '../controllers/auth.controller';
+import { validate } from '../middlewares/validate.middleware';
+import { registerSchema, loginSchema, refreshSchema } from '../validators/auth.validator';
 
 const router = Router();
 
-router.post('/register', async (req, res, next) => {
-    try {
-        const user = await authService.register(req.body);
-        res.status(201).json({ user });
-    } catch (error) {
-        next(error);
-    }
-});
+router.post('/register', validate(registerSchema), register);
 
-router.post('/login', async (req, res, next) => {
-    try {
-        const result = await authService.login({
-            ...req.body,
-            deviceInfo: req.headers['user-agent'],
-        });
-        res.json(result);
-    } catch (error) {
-        next(error);
-    }
-});
+router.post('/login', validate(loginSchema), login);
 
-router.post('/refresh', async (req, res, next) => {
-    try {
-        const result = await authService.refresh(req.body.refreshToken);
-        res.json(result);
-    } catch (error) {
-        next(error);
-    }
-});
+router.post('/refresh', validate(refreshSchema), refresh);
 
-router.post('/logout', async (req, res, next) => {
-    try {
-        await authService.logout(req.body.refreshToken);
-        res.json({ message: 'Logged out' });
-    } catch (error) {
-        next(error);
-    }
-});
+router.post('/logout', validate(refreshSchema), logout);
 
 export default router;
