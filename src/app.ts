@@ -15,8 +15,6 @@ app.use(helmet());              // Security headers
 app.use(cors());                // Cross-origin requests
 app.use(express.json());        // Parse JSON request bodies
 
-app.use('/api/auth', authRoutes)
-
 // === REQUEST LOGGING ===
 app.use((req: Request, res: Response, next: NextFunction) => {
     logger.info({
@@ -35,5 +33,7 @@ app.get('/health', (req: Request, res: Response) => {
         environment: config.NODE_ENV,
     });
 });
+
+app.use('/api/v1/auth', authRoutes)
 
 export { app };
