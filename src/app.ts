@@ -8,6 +8,7 @@ import { logger } from './lib/logger';
 import { config } from './lib/config';
 
 import authRoutes from './routes/auth.route';
+import { errorHandler } from './middlewares/errorHandler.middleware';
 
 import './events/auth.event';
 
@@ -44,5 +45,14 @@ app.get('/api-docs.json', (req, res) => {
 
 
 app.use('/api/v1/auth', authRoutes)
+
+app.use((req, res) => {
+    res.status(404).json({
+        success: false,
+        error: { code: 'NOT_FOUND', message: `Route ${req.path} not found` },
+    });
+});
+
+app.use(errorHandler);
 
 export { app };

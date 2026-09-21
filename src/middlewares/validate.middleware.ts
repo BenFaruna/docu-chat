@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
+import { ValidationError } from '../lib/errors';
 
 interface ValidatedRequestData {
     body?: unknown;
@@ -21,14 +22,7 @@ export function validate(schema: z.ZodType<ValidatedRequestData, any, any>) {
                 message: err.message,
             }));
 
-            return res.status(400).json({
-                success: false,
-                error: {
-                    code: 'VALIDATION_ERROR',
-                    message: 'Request validation failed',
-                    details: errors,
-                },
-            });
+            throw new ValidationError('Request validation failed', errors)
         }
 
         // Replace req properties with validated (and transformed) data
