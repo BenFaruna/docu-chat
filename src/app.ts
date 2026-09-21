@@ -5,13 +5,17 @@ import helmet from 'helmet';
 import { logger } from './lib/logger';
 import { config } from './lib/config';
 
-import './events/auth.events';
+import authRoutes from './routes/auth.route';
+
+import './events/auth.event';
 
 const app = express();
 
 app.use(helmet());              // Security headers
 app.use(cors());                // Cross-origin requests
 app.use(express.json());        // Parse JSON request bodies
+
+app.use('/api/auth', authRoutes)
 
 // === REQUEST LOGGING ===
 app.use((req: Request, res: Response, next: NextFunction) => {
