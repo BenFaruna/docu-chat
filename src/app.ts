@@ -1,6 +1,8 @@
 import express, { type Request, type Response, type NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './config/swagger';
 
 import { logger } from './lib/logger';
 import { config } from './lib/config';
@@ -33,6 +35,13 @@ app.get('/health', (req: Request, res: Response) => {
         environment: config.NODE_ENV,
     });
 });
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.get('/api-docs.json', (req, res) => {
+    res.json(swaggerSpec);
+});
+
 
 app.use('/api/v1/auth', authRoutes)
 
