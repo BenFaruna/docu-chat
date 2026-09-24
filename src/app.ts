@@ -8,6 +8,7 @@ import { logger } from './lib/logger';
 import { config } from './lib/config';
 
 import authRoutes from './routes/auth.route';
+import adminRoutes from './routes/admin.route';
 import { errorHandler } from './middlewares/errorHandler.middleware';
 
 import './events/auth.event';
@@ -45,6 +46,7 @@ app.get('/api-docs.json', (req, res) => {
 
 
 app.use('/api/v1/auth', authRoutes)
+app.use('/api/v1/admin', adminRoutes)
 
 app.use((req, res) => {
     res.status(404).json({
