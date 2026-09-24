@@ -197,7 +197,7 @@ export type UsageLogGroupByOutputType = {
   action: string
   tokens: number
   costUsd: number
-  metadata: runtime.JsonValue
+  metadata: runtime.JsonValue | null
   createdAt: Date
   _count: UsageLogCountAggregateOutputType | null
   _avg: UsageLogAvgAggregateOutputType | null
@@ -230,7 +230,7 @@ export type UsageLogWhereInput = {
   action?: Prisma.StringFilter<"UsageLog"> | string
   tokens?: Prisma.IntFilter<"UsageLog"> | number
   costUsd?: Prisma.FloatFilter<"UsageLog"> | number
-  metadata?: Prisma.JsonFilter<"UsageLog">
+  metadata?: Prisma.JsonNullableFilter<"UsageLog">
   createdAt?: Prisma.DateTimeFilter<"UsageLog"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
@@ -241,7 +241,7 @@ export type UsageLogOrderByWithRelationInput = {
   action?: Prisma.SortOrder
   tokens?: Prisma.SortOrder
   costUsd?: Prisma.SortOrder
-  metadata?: Prisma.SortOrder
+  metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
 }
@@ -255,7 +255,7 @@ export type UsageLogWhereUniqueInput = Prisma.AtLeast<{
   action?: Prisma.StringFilter<"UsageLog"> | string
   tokens?: Prisma.IntFilter<"UsageLog"> | number
   costUsd?: Prisma.FloatFilter<"UsageLog"> | number
-  metadata?: Prisma.JsonFilter<"UsageLog">
+  metadata?: Prisma.JsonNullableFilter<"UsageLog">
   createdAt?: Prisma.DateTimeFilter<"UsageLog"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
@@ -266,7 +266,7 @@ export type UsageLogOrderByWithAggregationInput = {
   action?: Prisma.SortOrder
   tokens?: Prisma.SortOrder
   costUsd?: Prisma.SortOrder
-  metadata?: Prisma.SortOrder
+  metadata?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.UsageLogCountOrderByAggregateInput
   _avg?: Prisma.UsageLogAvgOrderByAggregateInput
@@ -284,7 +284,7 @@ export type UsageLogScalarWhereWithAggregatesInput = {
   action?: Prisma.StringWithAggregatesFilter<"UsageLog"> | string
   tokens?: Prisma.IntWithAggregatesFilter<"UsageLog"> | number
   costUsd?: Prisma.FloatWithAggregatesFilter<"UsageLog"> | number
-  metadata?: Prisma.JsonWithAggregatesFilter<"UsageLog">
+  metadata?: Prisma.JsonNullableWithAggregatesFilter<"UsageLog">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"UsageLog"> | Date | string
 }
 
@@ -293,7 +293,7 @@ export type UsageLogCreateInput = {
   action: string
   tokens: number
   costUsd: number
-  metadata: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutUsageLogsInput
 }
@@ -304,7 +304,7 @@ export type UsageLogUncheckedCreateInput = {
   action: string
   tokens: number
   costUsd: number
-  metadata: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
@@ -313,7 +313,7 @@ export type UsageLogUpdateInput = {
   action?: Prisma.StringFieldUpdateOperationsInput | string
   tokens?: Prisma.IntFieldUpdateOperationsInput | number
   costUsd?: Prisma.FloatFieldUpdateOperationsInput | number
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutUsageLogsNestedInput
 }
@@ -324,7 +324,7 @@ export type UsageLogUncheckedUpdateInput = {
   action?: Prisma.StringFieldUpdateOperationsInput | string
   tokens?: Prisma.IntFieldUpdateOperationsInput | number
   costUsd?: Prisma.FloatFieldUpdateOperationsInput | number
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -334,7 +334,7 @@ export type UsageLogCreateManyInput = {
   action: string
   tokens: number
   costUsd: number
-  metadata: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
@@ -343,7 +343,7 @@ export type UsageLogUpdateManyMutationInput = {
   action?: Prisma.StringFieldUpdateOperationsInput | string
   tokens?: Prisma.IntFieldUpdateOperationsInput | number
   costUsd?: Prisma.FloatFieldUpdateOperationsInput | number
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -353,7 +353,7 @@ export type UsageLogUncheckedUpdateManyInput = {
   action?: Prisma.StringFieldUpdateOperationsInput | string
   tokens?: Prisma.IntFieldUpdateOperationsInput | number
   costUsd?: Prisma.FloatFieldUpdateOperationsInput | number
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -468,7 +468,7 @@ export type UsageLogCreateWithoutUserInput = {
   action: string
   tokens: number
   costUsd: number
-  metadata: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
@@ -477,7 +477,7 @@ export type UsageLogUncheckedCreateWithoutUserInput = {
   action: string
   tokens: number
   costUsd: number
-  metadata: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
@@ -516,7 +516,7 @@ export type UsageLogScalarWhereInput = {
   action?: Prisma.StringFilter<"UsageLog"> | string
   tokens?: Prisma.IntFilter<"UsageLog"> | number
   costUsd?: Prisma.FloatFilter<"UsageLog"> | number
-  metadata?: Prisma.JsonFilter<"UsageLog">
+  metadata?: Prisma.JsonNullableFilter<"UsageLog">
   createdAt?: Prisma.DateTimeFilter<"UsageLog"> | Date | string
 }
 
@@ -525,7 +525,7 @@ export type UsageLogCreateManyUserInput = {
   action: string
   tokens: number
   costUsd: number
-  metadata: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
 }
 
@@ -534,7 +534,7 @@ export type UsageLogUpdateWithoutUserInput = {
   action?: Prisma.StringFieldUpdateOperationsInput | string
   tokens?: Prisma.IntFieldUpdateOperationsInput | number
   costUsd?: Prisma.FloatFieldUpdateOperationsInput | number
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -543,7 +543,7 @@ export type UsageLogUncheckedUpdateWithoutUserInput = {
   action?: Prisma.StringFieldUpdateOperationsInput | string
   tokens?: Prisma.IntFieldUpdateOperationsInput | number
   costUsd?: Prisma.FloatFieldUpdateOperationsInput | number
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -552,7 +552,7 @@ export type UsageLogUncheckedUpdateManyWithoutUserInput = {
   action?: Prisma.StringFieldUpdateOperationsInput | string
   tokens?: Prisma.IntFieldUpdateOperationsInput | number
   costUsd?: Prisma.FloatFieldUpdateOperationsInput | number
-  metadata?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  metadata?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -623,7 +623,7 @@ export type $UsageLogPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     action: string
     tokens: number
     costUsd: number
-    metadata: runtime.JsonValue
+    metadata: runtime.JsonValue | null
     createdAt: Date
   }, ExtArgs["result"]["usageLog"]>
   composites: {}

@@ -13,6 +13,7 @@ import { errorHandler } from './middlewares/errorHandler.middleware';
 
 import './events/auth.event';
 import './events/admin.event';
+import './events/document.event';
 
 const app = express();
 

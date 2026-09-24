@@ -35,18 +35,18 @@ appEvents.on(AUTH_EVENTS.USER_REGISTERED, async (user) => {
 // Listener 2: Create a default welcome conversation
 appEvents.on(AUTH_EVENTS.USER_REGISTERED, async (user) => {
     try {
-        await prisma.conversation.create({
-            data: {
-                userId: user.id,
-                title: 'Welcome to DocuChat',
-            },
-        });
+        // await prisma.conversation.create({
+        //     data: {
+        //         userId: user.id,
+        //         title: 'Welcome to DocuChat',
+        //     },
+        // });
     } catch (error) {
         console.error('Failed to create welcome conversation:', error);
     }
 });
 
-// Listener 3: Log login events (useful for security audits)
+// // Listener 3: Log login events (useful for security audits)
 appEvents.on(AUTH_EVENTS.USER_LOGGED_IN, async (data) => {
     try {
         await prisma.usageLog.create({
