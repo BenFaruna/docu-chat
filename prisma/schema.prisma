@@ -20,6 +20,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   refreshTokens RefreshToken[]
 
+  roles UserRole[]
 
   @@index([email])
 }
@@ -37,3 +38,49 @@ model RefreshToken {
   @@index([expiresAt])
 }
 
+model Role {
+  id          String   @id @default(uuid())
+  name        String   @unique   // 'admin', 'member', 'viewer'
+  description String?
+  isDefault   Boolean  @default(false)  // New users get this role
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users       UserRole[]
+  permissions RolePermission[]
+}
+
+model Permission {
+  id          String   @id @default(uuid())
+  name        String   @unique   // 'documents:create'
+  description String?
+  resource    String              // 'documents'
+  action      String              // 'create'
+  createdAt   DateTime @default(now())
+
+  roles       RolePermission[]
+
+  @@unique([resource, action])
+}
+
+model UserRole {
+  userId    String
+  roleId    String
+  assignedAt DateTime @default(now())
+  assignedBy String?  // Who assigned this role (for audit)
+
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+}
