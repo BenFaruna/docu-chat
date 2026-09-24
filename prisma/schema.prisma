@@ -4,23 +4,24 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"       // Postgresql for development
+  provider = "postgresql" // Postgresql for development
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String         @id @default(cuid())
   name          String
-  email         String    @unique
+  email         String         @unique
   passwordHash  String
-  role          String    @default("user")
-  tier          String    @default("free")
-  isActive      Boolean   @default(true)
+  role          String         @default("user")
+  tier          String         @default("free")
+  isActive      Boolean        @default(true)
   deletedAt     DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   refreshTokens RefreshToken[]
 
-  roles UserRole[]
+  roles     UserRole[]
+  usageLogs UsageLog[]
 
   @@index([email])
 }
@@ -28,11 +29,11 @@ model User {
 model RefreshToken {
   id        String   @id @default(uuid())
   userId    String
-  token     String   @unique  // SHA-256 hash of the actual token
+  token     String   @unique // SHA-256 hash of the actual token
   expiresAt DateTime
   createdAt DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([expiresAt])
@@ -40,9 +41,9 @@ model RefreshToken {
 
 model Role {
   id          String   @id @default(uuid())
-  name        String   @unique   // 'admin', 'member', 'viewer'
+  name        String   @unique // 'admin', 'member', 'viewer'
   description String?
-  isDefault   Boolean  @default(false)  // New users get this role
+  isDefault   Boolean  @default(false) // New users get this role
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -52,25 +53,25 @@ model Role {
 
 model Permission {
   id          String   @id @default(uuid())
-  name        String   @unique   // 'documents:create'
+  name        String   @unique // 'documents:create'
   description String?
-  resource    String              // 'documents'
-  action      String              // 'create'
+  resource    String // 'documents'
+  action      String // 'create'
   createdAt   DateTime @default(now())
 
-  roles       RolePermission[]
+  roles RolePermission[]
 
   @@unique([resource, action])
 }
 
 model UserRole {
-  userId    String
-  roleId    String
+  userId     String
+  roleId     String
   assignedAt DateTime @default(now())
-  assignedBy String?  // Who assigned this role (for audit)
+  assignedBy String? // Who assigned this role (for audit)
 
-  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  role      Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
 
   @@id([userId, roleId])
 }
@@ -83,4 +84,18 @@ model RolePermission {
   permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
 
   @@id([roleId, permissionId])
+}
+
+model UsageLog {
+  id        String   @id @default(uuid())
+  userId    String
+  action    String
+  tokens    Int
+  costUsd   Float
+  metadata  Json
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }

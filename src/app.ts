@@ -12,6 +12,7 @@ import adminRoutes from './routes/admin.route';
 import { errorHandler } from './middlewares/errorHandler.middleware';
 
 import './events/auth.event';
+import './events/admin.event';
 
 const app = express();
 

@@ -47,3 +47,8 @@ export type UserRole = Prisma.UserRoleModel
  * 
  */
 export type RolePermission = Prisma.RolePermissionModel
+/**
+ * Model UsageLog
+ * 
+ */
+export type UsageLog = Prisma.UsageLogModel
