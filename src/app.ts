@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger';
+import { bullBoardAdapter } from './config/bullBoard';
 
 import { logger } from './lib/logger';
 import { config } from './lib/config';
@@ -63,6 +64,11 @@ app.get('/api-docs.json', (req, res) => {
 app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/admin', adminRoutes)
 app.use('/api/v1/documents', documentRoutes)
+
+// === QUEUE MONITOR ===
+if (config.NODE_ENV === 'development') {
+    app.use('/admin/queues', bullBoardAdapter.getRouter());
+}
 
 
 app.use((req, res) => {
