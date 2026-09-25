@@ -11,6 +11,8 @@ import { config } from './lib/config';
 import authRoutes from './routes/auth.route';
 import adminRoutes from './routes/admin.route';
 import documentRoutes from './routes/document.route';
+
+import { verifyWebhookSignature } from './middlewares/webhook.middleware';
 import { errorHandler } from './middlewares/errorHandler.middleware';
 
 import './events/auth.event';
@@ -23,6 +25,15 @@ const app = express();
 
 app.use(helmet());              // Security headers
 app.use(cors());                // Cross-origin requests
+
+const secret = config.WEBHOOK_SECRET!;
+app.use('/webhooks', verifyWebhookSignature(secret, "x-signature"), express.raw({
+    type: 'application/json',
+    verify: (req: any, res, buf) => {
+        req.rawBody = buf;
+    },
+}));
+
 app.use(express.json());        // Parse JSON request bodies
 
 app.use((req, res, next) => {

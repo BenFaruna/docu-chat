@@ -99,3 +99,15 @@ model UsageLog {
 
   @@index([userId])
 }
+
+model WebhookEvent {
+  id           String   @id  // The provider's event ID
+  provider     String         // 'stripe', 'github', etc.
+  eventType    String         // 'payment.succeeded', etc.
+  receivedAt   DateTime @default(now())
+  processedAt  DateTime?
+  payload      String         // Raw payload for debugging
+
+  @@index([provider, eventType])
+}
+
