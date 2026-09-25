@@ -38,3 +38,12 @@ export const deleteDocument = async (req: Request, res: Response, next: NextFunc
         next(error);
     }
 };
+
+export const processingStatus = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const status = await documentService.processingStatus(req.user!.id, req.params.id as string);
+        res.json({ success: true, data: status });
+    } catch (error) {
+        next(error);
+    }
+}

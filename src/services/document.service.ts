@@ -3,6 +3,7 @@ import { prisma } from '../lib/prisma';
 import { NotFoundError } from '../lib/errors';
 import { appEvents } from '../lib/events';
 import { DOC_EVENTS } from '../events/document.event';
+import { documentQueue } from '../queues/document.queue';
 
 interface ListDocumentsOptions {
   page: number;
@@ -148,5 +149,29 @@ export async function deleteDocument(
       deletedAt: new Date(),
       deletedBy: userId,
     },
+  });
+}
+
+export const processingStatus = async (userId: string, docId: string) => {
+
+  const doc = await prisma.document.findUnique({
+    where: { id: docId },
+    select: { id: true, status: true, error: true, userId: true },
+  });
+
+  if (!doc || doc.userId !== userId) {
+    throw new NotFoundError('Document not found');
+  }
+
+  // Try to find the active job for this document
+  const jobs = await documentQueue.getJobs(['active', 'waiting']);
+  const activeJob = jobs.find(
+    j => j.data.documentId === docId
+  );
+
+  return ({
+    status: doc.status,
+    error: doc.error,
+    progress: activeJob ? await activeJob.progress : null,
   });
 }

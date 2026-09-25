@@ -11,6 +11,7 @@ import {
     listDocuments,
     getDocument,
     deleteDocument,
+    processingStatus,
 } from '../controllers/document.controller';
 import { requirePermission } from '../middlewares/authorize.middleware';
 
@@ -48,6 +49,7 @@ router.use(authenticate);
  *         description: Not authenticated
  */
 router.get('/',
+    authenticate,
     requirePermission("documents:read"),
     validate(listDocumentsSchema),
     listDocuments
@@ -147,6 +149,37 @@ router.delete('/:id',
     requirePermission("admin:documents:delete", "documents:delete"),
     validate(documentParamsSchema),
     deleteDocument
+);
+
+/**
+ * @swagger
+ * /documents/{id}/processing-status:
+ *   get:
+ *     summary: Get document processing status
+ *     tags: [Documents]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: Document processing status
+ *       401:
+ *         description: Not authenticated
+ *       403:
+ *         description: Forbidden - not owner
+ *       404:
+ *         description: Document not found
+ */
+router.get('/:id/processing-status',
+    authenticate,
+    requirePermission('documents:read'),
+    processingStatus
 );
 
 export default router;

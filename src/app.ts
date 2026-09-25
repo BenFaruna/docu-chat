@@ -9,6 +9,7 @@ import { config } from './lib/config';
 
 import authRoutes from './routes/auth.route';
 import adminRoutes from './routes/admin.route';
+import documentRoutes from './routes/document.route';
 import { errorHandler } from './middlewares/errorHandler.middleware';
 
 import './events/auth.event';
@@ -22,6 +23,16 @@ const app = express();
 app.use(helmet());              // Security headers
 app.use(cors());                // Cross-origin requests
 app.use(express.json());        // Parse JSON request bodies
+
+app.use((req, res, next) => {
+    Object.defineProperty(req, 'query', {
+        value: { ...req.query },
+        writable: true,
+        configurable: true,
+        enumerable: true,
+    });
+    next();
+});
 
 // === REQUEST LOGGING ===
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -51,6 +62,8 @@ app.get('/api-docs.json', (req, res) => {
 
 app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/admin', adminRoutes)
+app.use('/api/v1/documents', documentRoutes)
+
 
 app.use((req, res) => {
     res.status(404).json({
