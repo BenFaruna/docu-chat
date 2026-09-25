@@ -15,6 +15,8 @@ import './events/auth.event';
 import './events/admin.event';
 import './events/document.event';
 
+import './queues/document.worker';
+
 const app = express();
 
 app.use(helmet());              // Security headers

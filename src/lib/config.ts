@@ -21,7 +21,9 @@ const envSchema = z.object({
     REFRESH_TOKEN_EXPIRES_IN: z.string().default('7d'),
 
     OPENAI_API_KEY: z.string().optional(),
-    REDIS_URL: z.string().optional(),
+    REDIS_HOST: z.string().default('localhost'),
+    REDIS_PORT: z.coerce.number().default(6379),
+    REDIS_PASSWORD: z.string().optional(),
 });
 
 const parsed = envSchema.safeParse(process.env);
