@@ -3,6 +3,7 @@ import { redisConnection } from './connection';
 import { prisma } from '../lib/prisma';
 import { appEvents } from '../lib/events';
 import { estimateTokens, splitIntoChunks } from '../lib/chunker';
+import { deadLetterQueue } from './deadLetter.queue';
 
 const worker = new Worker(
     'document-processing',
@@ -87,9 +88,23 @@ worker.on('completed', (job) => {
     console.log(`Job ${job.id} completed: ${job.returnvalue?.chunks} chunks`);
 });
 
-worker.on('failed', (job, error) => {
-    console.error(`Job ${job?.id} failed (attempt ${job?.attemptsMade}):`,
-        error.message);
+worker.on('failed', async (job, error) => {
+    if (!job) return;
+
+    // Check if all attempts exhausted
+    if (job.attemptsMade >= (job.opts.attempts ?? 3)) {
+        console.error(`Job ${job.id} permanently failed. Moving to DLQ.`);
+
+        await deadLetterQueue.add('failed-document', {
+            originalJobId: job.id,
+            originalQueue: 'document-processing',
+            data: job.data,
+            error: error.message,
+            failedAt: new Date().toISOString(),
+            attempts: job.attemptsMade,
+        });
+    }
+
 });
 
 worker.on('error', (error) => {
