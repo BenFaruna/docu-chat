@@ -41,7 +41,7 @@ app.use(helmet({
 ));              // Security headers
 
 const allowedOrigins = [
-    process.env.FRONTEND_URL || 'http://localhost:3001',
+    process.env.FRONTEND_URL || 'http://localhost:3000'
 ];
 
 app.use(cors({
