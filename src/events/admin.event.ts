@@ -1,7 +1,12 @@
 import { appEvents } from '../lib/events';
 import { prisma } from '../lib/prisma';
 
-appEvents.on('admin:role-assigned', async (data) => {
+export const ADMIN_EVENTS = {
+    ROLE_ASSIGNED: 'admin:role-assigned',
+    ROLE_REVOKED: 'admin:role-revoked',
+} as const;
+
+appEvents.on(ADMIN_EVENTS.ROLE_ASSIGNED, async (data) => {
     try {
         await prisma.usageLog.create({
             data: {
@@ -21,7 +26,7 @@ appEvents.on('admin:role-assigned', async (data) => {
     }
 });
 
-appEvents.on('admin:role-revoked', async (data) => {
+appEvents.on(ADMIN_EVENTS.ROLE_REVOKED, async (data) => {
     try {
         await prisma.usageLog.create({
             data: {

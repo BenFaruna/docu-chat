@@ -122,7 +122,7 @@ export async function refresh(rawRefreshToken: string) {
     const stored = await tokenRepository.findToken(tokenHash);
 
     if (!stored || stored.expiresAt < new Date()) {
-        throw new Error('Refresh token expired or revoked');
+        throw new UnauthorizedError('Refresh token expired or revoked');
     }
 
     // Get the user

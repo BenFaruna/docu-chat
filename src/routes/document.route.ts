@@ -14,6 +14,7 @@ import {
     processingStatus,
 } from '../controllers/document.controller';
 import { requirePermission } from '../middlewares/authorize.middleware';
+import { conditionalGet } from '../middlewares/etag.middleware';
 
 const router = Router();
 router.use(authenticate);
@@ -52,6 +53,7 @@ router.get('/',
     authenticate,
     requirePermission("documents:read"),
     validate(listDocumentsSchema),
+    conditionalGet(),
     listDocuments
 );
 
@@ -117,6 +119,7 @@ router.post('/',
 router.get('/:id',
     requirePermission("documents:read"),
     validate(documentParamsSchema),
+    conditionalGet(),
     getDocument
 );
 
