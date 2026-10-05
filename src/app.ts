@@ -19,8 +19,10 @@ import './events/auth.event';
 import './events/admin.event';
 import './events/cache.event';
 import './events/document.event';
+import './events/security.event';
 
 import './queues/document.worker';
+import { apiLimiter, authLimiter, uploadLimiter } from './middlewares/rateLimiter.middleware';
 
 const app = express();
 
@@ -73,9 +75,10 @@ app.get('/api-docs.json', (req, res) => {
 });
 
 
-app.use('/api/v1/auth', authRoutes)
+app.use('/api/v1', apiLimiter)
+app.use('/api/v1/auth', authLimiter, authRoutes)
 app.use('/api/v1/admin', adminRoutes)
-app.use('/api/v1/documents', documentRoutes)
+app.use('/api/v1/documents', uploadLimiter, documentRoutes)
 
 // === QUEUE MONITOR ===
 if (config.NODE_ENV === 'development') {
