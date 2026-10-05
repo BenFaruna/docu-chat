@@ -14,6 +14,7 @@ import documentRoutes from './routes/document.route';
 
 import { verifyWebhookSignature } from './middlewares/webhook.middleware';
 import { errorHandler } from './middlewares/errorHandler.middleware';
+import { sanitizeInput } from './middlewares/sanitize.middleware';
 
 import './events/auth.event';
 import './events/admin.event';
@@ -38,6 +39,7 @@ app.use('/webhooks', verifyWebhookSignature(secret, "x-signature"), express.raw(
 }));
 
 app.use(express.json());        // Parse JSON request bodies
+app.use(sanitizeInput);
 
 app.use((req, res, next) => {
     Object.defineProperty(req, 'query', {
