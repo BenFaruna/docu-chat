@@ -27,8 +27,40 @@ import { apiLimiter, authLimiter, uploadLimiter } from './middlewares/rateLimite
 
 const app = express();
 
-app.use(helmet());              // Security headers
-app.use(cors());                // Cross-origin requests
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'none'"],
+            scriptSrc: ["'none'"],
+            styleSrc: ["'none'"],
+            imgSrc: ["'none'"],
+            connectSrc: ["'self'"],
+        },
+    },
+}
+));              // Security headers
+
+const allowedOrigins = [
+    process.env.FRONTEND_URL || 'http://localhost:3001',
+];
+
+app.use(cors({
+    origin: (origin, callback) => {
+        // Allow requests with no origin (mobile apps, curl, server-to-server)
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error(`Origin ${origin} not allowed by CORS`));
+        }
+    },
+    credentials: true,  // Allow cookies/auth headers
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    maxAge: 86400, // Cache preflight requests for 24 hours
+}));
+
 
 const secret = config.WEBHOOK_SECRET!;
 app.use('/webhooks', verifyWebhookSignature(secret, "x-signature"), express.raw({
@@ -37,9 +69,6 @@ app.use('/webhooks', verifyWebhookSignature(secret, "x-signature"), express.raw(
         req.rawBody = buf;
     },
 }));
-
-app.use(express.json());        // Parse JSON request bodies
-app.use(sanitizeInput);
 
 app.use((req, res, next) => {
     Object.defineProperty(req, 'query', {
@@ -50,6 +79,10 @@ app.use((req, res, next) => {
     });
     next();
 });
+
+app.use(express.json());        // Parse JSON request bodies
+app.use(sanitizeInput);
+
 
 // === REQUEST LOGGING ===
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -70,7 +103,16 @@ app.get('/health', (req: Request, res: Response) => {
     });
 });
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api-docs', helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'"],
+            styleSrc: ["'self'", "'unsafe-inline'"],
+            imgSrc: ["'self'", "data:"],
+        },
+    },
+}), swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.get('/api-docs.json', (req, res) => {
     res.json(swaggerSpec);

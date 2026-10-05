@@ -19,6 +19,7 @@ function createLimiter(options: {
             sendCommand: (...args: string[]) =>
                 (cacheRedis as any).call(...args),
         }),
+        validate: { singleCount: false },
         message: {
             success: false,
             error: {
