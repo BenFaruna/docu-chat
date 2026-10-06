@@ -46,7 +46,9 @@ router.post(
                 data: { processedAt: new Date() },
             });
         } catch (error) {
-            logger.error({ err: error, event: 'webhook:error' }, `Webhook ${event.id} processing failed`);
+            logger.error({
+                err: error, event: 'webhook:error', correlationId: (req as any).correlationId
+            }, `Webhook ${event.id} processing failed`);
             // Don't mark processedAt. The provider will retry.
         }
     }

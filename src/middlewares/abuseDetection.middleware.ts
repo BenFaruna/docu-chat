@@ -20,7 +20,10 @@ export async function trackSuspiciousActivity(
             const uniqueDocs = await cacheRedis.scard(key);
             if (uniqueDocs > 50) {
                 logger.warn(
-                    { userId, docId, uniqueDocs, ip: req.ip, event: 'abuse-detection' },
+                    {
+                        userId, docId, uniqueDocs, ip: req.ip,
+                        event: 'abuse-detection', correlationId: (req as any).correlationId
+                    },
                     `Suspicious: user ${userId} accessed ${uniqueDocs} unique documents in 5 min`
                 );
                 // In production: emit event, alert admin, temporarily throttle

@@ -10,7 +10,9 @@ export function errorHandler(
 ) {
     // Operational error: we created this intentionally
     if (err instanceof AppError) {
-        logger.warn({ err: err, event: 'error' }, `[${err.code}] ${scrubSensitiveData(err.message)}`);
+        logger.warn({
+            err: err, event: 'error', correlationId: (req as any).correlationId
+        }, `[${err.code}] ${scrubSensitiveData(err.message)}`);
 
         return res.status(err.statusCode).json({
             success: false,
@@ -23,7 +25,7 @@ export function errorHandler(
     }
 
     // Programming error: this is a bug
-    logger.error({ err, event: 'error' }, "Unhandled error");
+    logger.error({ err, event: 'error', correlationId: (req as any).correlationId }, "Unhandled error");
 
     return res.status(500).json({
         success: false,

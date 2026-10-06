@@ -24,6 +24,7 @@ import './events/security.event';
 
 import './queues/document.worker';
 import { apiLimiter, authLimiter, uploadLimiter } from './middlewares/rateLimiter.middleware';
+import { requestLogger } from './middlewares/requestLogger.middleware';
 
 const app = express();
 
@@ -60,6 +61,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'],
     maxAge: 86400, // Cache preflight requests for 24 hours
 }));
+app.use(requestLogger);
 
 
 const secret = config.WEBHOOK_SECRET!;
