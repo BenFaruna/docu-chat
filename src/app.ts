@@ -12,6 +12,7 @@ import { metricsRegistry } from './lib/metrics';
 import authRoutes from './routes/auth.route';
 import adminRoutes from './routes/admin.route';
 import documentRoutes from './routes/document.route';
+import healthRoutes from './routes/health.route';
 
 import { verifyWebhookSignature } from './middlewares/webhook.middleware';
 import { errorHandler } from './middlewares/errorHandler.middleware';
@@ -131,6 +132,7 @@ app.get('/api-docs.json', (req, res) => {
 });
 
 
+app.use(healthRoutes)
 app.use('/api/v1', apiLimiter)
 app.use('/api/v1/auth', authLimiter, authRoutes)
 app.use('/api/v1/admin', adminRoutes)
