@@ -30,12 +30,11 @@ export async function createDocument(data: {
       filename: data.title.toLowerCase().replace(/\s+/g, '-'),
       content: data.content,
       status: 'pending',
-      correlationId: data.correlationId
     },
   });
 
   // Queue for background processing
-  const jobId = await queueDocumentForProcessing(doc.id, data.userId);
+  const jobId = await queueDocumentForProcessing(doc.id, data.userId, data.correlationId);
 
   appEvents.emit('doc:created', {
     userId: data.userId,

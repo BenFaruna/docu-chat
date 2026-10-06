@@ -58,7 +58,9 @@ export const ModelName = {
   UserRole: 'UserRole',
   RolePermission: 'RolePermission',
   UsageLog: 'UsageLog',
-  WebhookEvent: 'WebhookEvent'
+  WebhookEvent: 'WebhookEvent',
+  Document: 'Document',
+  Chunk: 'Chunk'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -169,6 +171,33 @@ export const WebhookEventScalarFieldEnum = {
 } as const
 
 export type WebhookEventScalarFieldEnum = (typeof WebhookEventScalarFieldEnum)[keyof typeof WebhookEventScalarFieldEnum]
+
+
+export const DocumentScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  userId: 'userId',
+  filename: 'filename',
+  content: 'content',
+  status: 'status',
+  chunkCount: 'chunkCount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
+
+
+export const ChunkScalarFieldEnum = {
+  id: 'id',
+  documentId: 'documentId',
+  index: 'index',
+  content: 'content',
+  tokenCount: 'tokenCount',
+  createdAt: 'createdAt'
+} as const
+
+export type ChunkScalarFieldEnum = (typeof ChunkScalarFieldEnum)[keyof typeof ChunkScalarFieldEnum]
 
 
 export const SortOrder = {

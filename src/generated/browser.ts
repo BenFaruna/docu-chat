@@ -57,3 +57,13 @@ export type UsageLog = Prisma.UsageLogModel
  * 
  */
 export type WebhookEvent = Prisma.WebhookEventModel
+/**
+ * Model Document
+ * 
+ */
+export type Document = Prisma.DocumentModel
+/**
+ * Model Chunk
+ * 
+ */
+export type Chunk = Prisma.ChunkModel
