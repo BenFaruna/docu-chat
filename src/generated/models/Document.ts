@@ -44,6 +44,8 @@ export type DocumentMinAggregateOutputType = {
   chunkCount: number | null
   createdAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
+  deletedBy: string | null
 }
 
 export type DocumentMaxAggregateOutputType = {
@@ -56,6 +58,8 @@ export type DocumentMaxAggregateOutputType = {
   chunkCount: number | null
   createdAt: Date | null
   updatedAt: Date | null
+  deletedAt: Date | null
+  deletedBy: string | null
 }
 
 export type DocumentCountAggregateOutputType = {
@@ -68,6 +72,8 @@ export type DocumentCountAggregateOutputType = {
   chunkCount: number
   createdAt: number
   updatedAt: number
+  deletedAt: number
+  deletedBy: number
   _all: number
 }
 
@@ -90,6 +96,8 @@ export type DocumentMinAggregateInputType = {
   chunkCount?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
+  deletedBy?: true
 }
 
 export type DocumentMaxAggregateInputType = {
@@ -102,6 +110,8 @@ export type DocumentMaxAggregateInputType = {
   chunkCount?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
+  deletedBy?: true
 }
 
 export type DocumentCountAggregateInputType = {
@@ -114,6 +124,8 @@ export type DocumentCountAggregateInputType = {
   chunkCount?: true
   createdAt?: true
   updatedAt?: true
+  deletedAt?: true
+  deletedBy?: true
   _all?: true
 }
 
@@ -213,6 +225,8 @@ export type DocumentGroupByOutputType = {
   chunkCount: number
   createdAt: Date
   updatedAt: Date
+  deletedAt: Date | null
+  deletedBy: string | null
   _count: DocumentCountAggregateOutputType | null
   _avg: DocumentAvgAggregateOutputType | null
   _sum: DocumentSumAggregateOutputType | null
@@ -248,6 +262,8 @@ export type DocumentWhereInput = {
   chunkCount?: Prisma.IntFilter<"Document"> | number
   createdAt?: Prisma.DateTimeFilter<"Document"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Document"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Document"> | Date | string | null
+  deletedBy?: Prisma.StringNullableFilter<"Document"> | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   chunks?: Prisma.ChunkListRelationFilter
 }
@@ -262,6 +278,8 @@ export type DocumentOrderByWithRelationInput = {
   chunkCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  deletedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   chunks?: Prisma.ChunkOrderByRelationAggregateInput
 }
@@ -279,6 +297,8 @@ export type DocumentWhereUniqueInput = Prisma.AtLeast<{
   chunkCount?: Prisma.IntFilter<"Document"> | number
   createdAt?: Prisma.DateTimeFilter<"Document"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Document"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Document"> | Date | string | null
+  deletedBy?: Prisma.StringNullableFilter<"Document"> | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   chunks?: Prisma.ChunkListRelationFilter
 }, "id">
@@ -293,6 +313,8 @@ export type DocumentOrderByWithAggregationInput = {
   chunkCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  deletedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.DocumentCountOrderByAggregateInput
   _avg?: Prisma.DocumentAvgOrderByAggregateInput
   _max?: Prisma.DocumentMaxOrderByAggregateInput
@@ -313,6 +335,8 @@ export type DocumentScalarWhereWithAggregatesInput = {
   chunkCount?: Prisma.IntWithAggregatesFilter<"Document"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Document"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Document"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Document"> | Date | string | null
+  deletedBy?: Prisma.StringNullableWithAggregatesFilter<"Document"> | string | null
 }
 
 export type DocumentCreateInput = {
@@ -324,6 +348,8 @@ export type DocumentCreateInput = {
   chunkCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
   user: Prisma.UserCreateNestedOneWithoutDocumentsInput
   chunks?: Prisma.ChunkCreateNestedManyWithoutDocumentInput
 }
@@ -338,6 +364,8 @@ export type DocumentUncheckedCreateInput = {
   chunkCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
   chunks?: Prisma.ChunkUncheckedCreateNestedManyWithoutDocumentInput
 }
 
@@ -350,6 +378,8 @@ export type DocumentUpdateInput = {
   chunkCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput
   chunks?: Prisma.ChunkUpdateManyWithoutDocumentNestedInput
 }
@@ -364,6 +394,8 @@ export type DocumentUncheckedUpdateInput = {
   chunkCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chunks?: Prisma.ChunkUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
@@ -377,6 +409,8 @@ export type DocumentCreateManyInput = {
   chunkCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
 }
 
 export type DocumentUpdateManyMutationInput = {
@@ -388,6 +422,8 @@ export type DocumentUpdateManyMutationInput = {
   chunkCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DocumentUncheckedUpdateManyInput = {
@@ -400,6 +436,8 @@ export type DocumentUncheckedUpdateManyInput = {
   chunkCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DocumentListRelationFilter = {
@@ -422,6 +460,8 @@ export type DocumentCountOrderByAggregateInput = {
   chunkCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
+  deletedBy?: Prisma.SortOrder
 }
 
 export type DocumentAvgOrderByAggregateInput = {
@@ -438,6 +478,8 @@ export type DocumentMaxOrderByAggregateInput = {
   chunkCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
+  deletedBy?: Prisma.SortOrder
 }
 
 export type DocumentMinOrderByAggregateInput = {
@@ -450,6 +492,8 @@ export type DocumentMinOrderByAggregateInput = {
   chunkCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
+  deletedBy?: Prisma.SortOrder
 }
 
 export type DocumentSumOrderByAggregateInput = {
@@ -526,6 +570,8 @@ export type DocumentCreateWithoutUserInput = {
   chunkCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
   chunks?: Prisma.ChunkCreateNestedManyWithoutDocumentInput
 }
 
@@ -538,6 +584,8 @@ export type DocumentUncheckedCreateWithoutUserInput = {
   chunkCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
   chunks?: Prisma.ChunkUncheckedCreateNestedManyWithoutDocumentInput
 }
 
@@ -580,6 +628,8 @@ export type DocumentScalarWhereInput = {
   chunkCount?: Prisma.IntFilter<"Document"> | number
   createdAt?: Prisma.DateTimeFilter<"Document"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Document"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Document"> | Date | string | null
+  deletedBy?: Prisma.StringNullableFilter<"Document"> | string | null
 }
 
 export type DocumentCreateWithoutChunksInput = {
@@ -591,6 +641,8 @@ export type DocumentCreateWithoutChunksInput = {
   chunkCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
   user: Prisma.UserCreateNestedOneWithoutDocumentsInput
 }
 
@@ -604,6 +656,8 @@ export type DocumentUncheckedCreateWithoutChunksInput = {
   chunkCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
 }
 
 export type DocumentCreateOrConnectWithoutChunksInput = {
@@ -631,6 +685,8 @@ export type DocumentUpdateWithoutChunksInput = {
   chunkCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutDocumentsNestedInput
 }
 
@@ -644,6 +700,8 @@ export type DocumentUncheckedUpdateWithoutChunksInput = {
   chunkCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type DocumentCreateManyUserInput = {
@@ -655,6 +713,8 @@ export type DocumentCreateManyUserInput = {
   chunkCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  deletedBy?: string | null
 }
 
 export type DocumentUpdateWithoutUserInput = {
@@ -666,6 +726,8 @@ export type DocumentUpdateWithoutUserInput = {
   chunkCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chunks?: Prisma.ChunkUpdateManyWithoutDocumentNestedInput
 }
 
@@ -678,6 +740,8 @@ export type DocumentUncheckedUpdateWithoutUserInput = {
   chunkCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   chunks?: Prisma.ChunkUncheckedUpdateManyWithoutDocumentNestedInput
 }
 
@@ -690,6 +754,8 @@ export type DocumentUncheckedUpdateManyWithoutUserInput = {
   chunkCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -733,6 +799,8 @@ export type DocumentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   chunkCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
+  deletedBy?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   chunks?: boolean | Prisma.Document$chunksArgs<ExtArgs>
   _count?: boolean | Prisma.DocumentCountOutputTypeDefaultArgs<ExtArgs>
@@ -748,6 +816,8 @@ export type DocumentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   chunkCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
+  deletedBy?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["document"]>
 
@@ -761,6 +831,8 @@ export type DocumentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   chunkCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
+  deletedBy?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["document"]>
 
@@ -774,9 +846,11 @@ export type DocumentSelectScalar = {
   chunkCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  deletedAt?: boolean
+  deletedBy?: boolean
 }
 
-export type DocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "userId" | "filename" | "content" | "status" | "chunkCount" | "createdAt" | "updatedAt", ExtArgs["result"]["document"]>
+export type DocumentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "userId" | "filename" | "content" | "status" | "chunkCount" | "createdAt" | "updatedAt" | "deletedAt" | "deletedBy", ExtArgs["result"]["document"]>
 export type DocumentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   chunks?: boolean | Prisma.Document$chunksArgs<ExtArgs>
@@ -805,6 +879,8 @@ export type $DocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     chunkCount: number
     createdAt: Date
     updatedAt: Date
+    deletedAt: Date | null
+    deletedBy: string | null
   }, ExtArgs["result"]["document"]>
   composites: {}
 }
@@ -1239,6 +1315,8 @@ export interface DocumentFieldRefs {
   readonly chunkCount: Prisma.FieldRef<"Document", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Document", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Document", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"Document", 'DateTime'>
+  readonly deletedBy: Prisma.FieldRef<"Document", 'String'>
 }
     
 

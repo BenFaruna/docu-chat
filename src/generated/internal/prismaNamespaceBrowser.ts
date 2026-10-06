@@ -182,7 +182,9 @@ export const DocumentScalarFieldEnum = {
   status: 'status',
   chunkCount: 'chunkCount',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt',
+  deletedBy: 'deletedBy'
 } as const
 
 export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
