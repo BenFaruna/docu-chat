@@ -3,7 +3,6 @@ import { openaiClient } from './openai.client';
 import { withRetry } from './retry';
 import { logger } from '../logger';
 
-// The function we're protecting
 async function callOpenAI(path: string, body: any) {
     return withRetry(() => openaiClient.post(path, body));
 }
