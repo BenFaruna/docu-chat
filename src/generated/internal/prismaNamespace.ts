@@ -1306,6 +1306,7 @@ export const DocumentScalarFieldEnum = {
   filename: 'filename',
   content: 'content',
   status: 'status',
+  error: 'error',
   chunkCount: 'chunkCount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',

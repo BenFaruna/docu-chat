@@ -122,6 +122,7 @@ model Document {
   // Optional metadata about the document
   content   String
   status    String
+  error     String?
   chunkCount Int     @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
