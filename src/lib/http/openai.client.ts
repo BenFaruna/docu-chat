@@ -1,5 +1,6 @@
 import axios, { type AxiosInstance } from 'axios';
 import { config } from '../config';
+import { logger } from '../logger';
 
 export const openaiClient: AxiosInstance = axios.create({
     baseURL: 'https://api.openai.com/v1',
@@ -14,7 +15,7 @@ export const openaiClient: AxiosInstance = axios.create({
 openaiClient.interceptors.request.use((config) => {
     const startTime = Date.now();
     (config as any).metadata = { startTime };
-    console.log(`→ OpenAI ${config.method?.toUpperCase()} ${config.url}`);
+    logger.info(`→ OpenAI ${config.method?.toUpperCase()} ${config.url}`);
     return config;
 });
 
@@ -27,10 +28,10 @@ openaiClient.interceptors.response.use(
         );
 
         if (remaining < 50) {
-            console.warn(`OpenAI rate limit getting low: ${remaining} remaining`);
+            logger.warn(`OpenAI rate limit getting low: ${remaining} remaining`);
         }
 
-        console.log(
+        logger.info(
             `← OpenAI ${response.status} ${response.config.url} (${duration}ms)`
         );
         return response;
@@ -41,18 +42,19 @@ openaiClient.interceptors.response.use(
 
         if (error.response) {
             // Server responded with error status
-            console.error(
-                `✕ OpenAI ${error.response.status} ${error.config?.url} (${duration}ms):`,
-                error.response.data
+            logger.error(
+                {
+                    err: error,
+                    event: 'openai:error', data: error.response.data
+                }, `✕ OpenAI ${error.response.status} ${error.config?.url} (${duration}ms):`
             );
         } else if (error.request) {
             // No response received (timeout, network error)
-            console.error(
-                `✕ OpenAI no response ${error.config?.url} (${duration}ms):`,
-                error.message
+            logger.error(
+                { err: error, event: 'openai:error' }, `✕ OpenAI no response ${error.config?.url} (${duration}ms):`
             );
         } else {
-            console.error(`✕ OpenAI request setup error:`, error.message);
+            logger.error({ err: error, event: 'openai:error' }, "✕ OpenAI request setup error");
         }
 
         return Promise.reject(error);

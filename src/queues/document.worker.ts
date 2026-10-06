@@ -4,12 +4,13 @@ import { prisma } from '../lib/prisma';
 import { appEvents } from '../lib/events';
 import { estimateTokens, splitIntoChunks } from '../lib/chunker';
 import { deadLetterQueue } from './deadLetter.queue';
+import { logger } from '../lib/logger';
 
 const worker = new Worker(
     'document-processing',
     async (job: Job) => {
         const { documentId, userId } = job.data;
-        console.log(`Processing document ${documentId} (attempt ${job.attemptsMade + 1})`);
+        logger.info({ documentId, attempts: job.attemptsMade, userId }, `Processing document ${documentId} (attempt ${job.attemptsMade + 1})`);
 
         // Step 1: Fetch the document content
         const doc = await prisma.document.findUniqueOrThrow({
@@ -85,7 +86,7 @@ const worker = new Worker(
 
 // Event listeners for logging
 worker.on('completed', (job) => {
-    console.log(`Job ${job.id} completed: ${job.returnvalue?.chunks} chunks`);
+    logger.info({ job, chunks: job.returnvalue?.chunks, event: 'job:completed' }, `Job ${job.id} completed: ${job.returnvalue?.chunks} chunks`);
 });
 
 worker.on('failed', async (job, error) => {
@@ -93,7 +94,7 @@ worker.on('failed', async (job, error) => {
 
     // Check if all attempts exhausted
     if (job.attemptsMade >= (job.opts.attempts ?? 3)) {
-        console.error(`Job ${job.id} permanently failed. Moving to DLQ.`);
+        logger.error({ job, err: error, event: 'job:failed' }, `Job ${job.id} permanently failed. Moving to DLQ.`);
 
         await deadLetterQueue.add('failed-document', {
             originalJobId: job.id,
@@ -108,7 +109,7 @@ worker.on('failed', async (job, error) => {
 });
 
 worker.on('error', (error) => {
-    console.error('Worker error:', error);
+    logger.error({ err: error, event: 'job:error' }, 'Worker error:');
 });
 
 export { worker };

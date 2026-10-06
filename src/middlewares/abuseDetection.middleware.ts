@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import { cacheRedis } from '../lib/cache';
+import { logger } from '../lib/logger';
 
 export async function trackSuspiciousActivity(
     req: Request, res: Response, next: NextFunction
@@ -18,7 +19,8 @@ export async function trackSuspiciousActivity(
 
             const uniqueDocs = await cacheRedis.scard(key);
             if (uniqueDocs > 50) {
-                console.warn(
+                logger.warn(
+                    { userId, docId, uniqueDocs, ip: req.ip, event: 'abuse-detection' },
                     `Suspicious: user ${userId} accessed ${uniqueDocs} unique documents in 5 min`
                 );
                 // In production: emit event, alert admin, temporarily throttle

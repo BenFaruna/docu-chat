@@ -1,5 +1,6 @@
 import { appEvents } from '../lib/events';
 import { prisma } from '../lib/prisma';
+import { logger } from '../lib/logger';
 
 export const ADMIN_EVENTS = {
     ROLE_ASSIGNED: 'admin:role-assigned',
@@ -22,7 +23,7 @@ appEvents.on(ADMIN_EVENTS.ROLE_ASSIGNED, async (data) => {
             },
         });
     } catch (error) {
-        console.error('Failed to log role assignment:', error);
+        logger.error({ err: error, event: 'role_assigned' }, 'Failed to log role assignment');
     }
 });
 
@@ -42,6 +43,6 @@ appEvents.on(ADMIN_EVENTS.ROLE_REVOKED, async (data) => {
             },
         });
     } catch (error) {
-        console.error('Failed to log role revocation:', error);
+        logger.error({ err: error, event: 'role_revoked' }, 'Failed to log role revocation');
     }
 });

@@ -1,20 +1,26 @@
-
 import pino from 'pino';
 import { config } from './config';
 
-export const logger = pino({
-  level: config.NODE_ENV === 'production' ? 'info' : 'debug',
+const isProduction = config.NODE_ENV === 'production';
 
-  // Human-readable output in development
-  // JSON output in production
-  ...(config.NODE_ENV !== 'production' && {
-    transport: {
-      target: 'pino-pretty',
-      options: {
-        colorize: true,
-        translateTime: 'SYS:standard',
-        ignore: 'pid,hostname',
-      },
+export const logger = pino({
+    level: isProduction ? 'info' : 'debug',
+    base: { service: 'docuchat' },
+    timestamp: pino.stdTimeFunctions.isoTime,
+    formatters: {
+        level: (label) => ({ level: label }),
     },
-  }),
+    ...(isProduction
+        ? {}
+        : {
+            transport: {
+                target: 'pino-pretty',
+                options: {
+                    colorize: true,
+                    translateTime: 'SYS:standard',
+                    ignore: 'pid,hostname',
+                },
+            },
+        }),
+    redact: ['req.headers.authorization', 'password', '*.token'],
 });
