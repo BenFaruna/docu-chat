@@ -20,6 +20,7 @@ export async function createDocument(data: {
   title: string;
   content: string;
   userId: string;
+  correlationId: string;
 }) {
   // Create the document with pending status
   const doc = await prisma.document.create({
@@ -29,6 +30,7 @@ export async function createDocument(data: {
       filename: data.title.toLowerCase().replace(/\s+/g, '-'),
       content: data.content,
       status: 'pending',
+      correlationId: data.correlationId
     },
   });
 

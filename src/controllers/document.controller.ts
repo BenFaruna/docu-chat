@@ -4,7 +4,9 @@ import * as documentService from '../services/document.service';
 
 export const createDocument = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const doc = await documentService.createDocument({ ...req.body, userId: req.user!.id });
+        const doc = await documentService.createDocument({
+            ...req.body, userId: req.user!.id, correlationId: (req as any).correlationId
+        });
         res.status(202).json(doc);
     } catch (error) {
         next(error);

@@ -9,8 +9,8 @@ import { logger } from '../lib/logger';
 const worker = new Worker(
     'document-processing',
     async (job: Job) => {
-        const { documentId, userId } = job.data;
-        logger.info({ documentId, attempts: job.attemptsMade, userId }, `Processing document ${documentId} (attempt ${job.attemptsMade + 1})`);
+        const { documentId, userId, correlationId } = job.data;
+        logger.info({ documentId, attempts: job.attemptsMade, userId, correlationId }, `Processing document ${documentId} (attempt ${job.attemptsMade + 1})`);
 
         // Step 1: Fetch the document content
         const doc = await prisma.document.findUniqueOrThrow({
