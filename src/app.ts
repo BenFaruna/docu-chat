@@ -7,6 +7,7 @@ import { bullBoardAdapter } from './config/bullBoard';
 
 import { logger } from './lib/logger';
 import { config } from './lib/config';
+import { metricsRegistry } from './lib/metrics';
 
 import authRoutes from './routes/auth.route';
 import adminRoutes from './routes/admin.route';
@@ -15,6 +16,7 @@ import documentRoutes from './routes/document.route';
 import { verifyWebhookSignature } from './middlewares/webhook.middleware';
 import { errorHandler } from './middlewares/errorHandler.middleware';
 import { sanitizeInput } from './middlewares/sanitize.middleware';
+import { metricsMiddleware } from './middlewares/metrics.middleware';
 
 import './events/auth.event';
 import './events/admin.event';
@@ -84,6 +86,14 @@ app.use((req, res, next) => {
 
 app.use(express.json());        // Parse JSON request bodies
 app.use(sanitizeInput);
+app.use(metricsMiddleware);
+
+// Metrics endpoint (no auth — Prometheus needs to scrape it)
+app.get('/metrics', async (req, res) => {
+    res.set('Content-Type', metricsRegistry.contentType);
+    res.send(await metricsRegistry.metrics());
+});
+
 
 
 // === REQUEST LOGGING ===
