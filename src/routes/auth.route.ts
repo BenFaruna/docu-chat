@@ -10,34 +10,51 @@ const router = Router();
  * /auth/register:
  *   post:
  *     summary: Register a new user
+ *     description: |
+ *       Creates a new user account. The password must be at least 8 characters
+ *       long and contain at least one uppercase letter and one number.
+ *       The returned tokens can be used immediately to authenticate subsequent requests.
  *     tags: [Authentication]
+ *     security: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required: [email, password]
- *             properties:
- *               name:
- *                 type: string
- *                 example: John Doe
- *                 minLength: 3
- *               email:
- *                 type: string
- *                 format: email
- *                 example: student@example.com
- *               password:
- *                 type: string
- *                 minLength: 8
- *                 example: MyPassword123
+ *             $ref: '#/components/schemas/RegisterRequest'
  *     responses:
  *       201:
- *         description: User created successfully
+ *         description: User created successfully. Returns auth tokens.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/SuccessResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       $ref: '#/components/schemas/AuthTokens'
+ *             example:
+ *               success: true
+ *               data:
+ *                 accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                 refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                 expiresIn: 900
  *       400:
- *         description: Validation error
+ *         $ref: '#/components/responses/ValidationError'
  *       409:
- *         description: Email already registered
+ *         description: Email address is already registered
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error:
+ *                 code: CONFLICT
+ *                 message: Email already registered
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
  */
 router.post('/register', validate(registerSchema), register);
 
@@ -45,28 +62,52 @@ router.post('/register', validate(registerSchema), register);
  * @swagger
  * /auth/login:
  *   post:
- *     summary: User login
+ *     summary: Authenticate a user
+ *     description: |
+ *       Validates credentials and returns a short-lived JWT access token and a
+ *       long-lived refresh token. Store the refresh token securely — it can be
+ *       used to obtain new access tokens via `POST /auth/refresh`.
  *     tags: [Authentication]
+ *     security: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required: [email, password]
- *             properties:
- *               email:
- *                 type: string
- *                 format: email
- *                 example: [EMAIL_ADDRESS]
- *               password:
- *                 type: string
- *                 example: MyPassword123
+ *             $ref: '#/components/schemas/LoginRequest'
  *     responses:
  *       200:
- *         description: Login successful
+ *         description: Login successful. Returns auth tokens.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/SuccessResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       $ref: '#/components/schemas/AuthTokens'
+ *             example:
+ *               success: true
+ *               data:
+ *                 accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                 refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *                 expiresIn: 900
+ *       400:
+ *         $ref: '#/components/responses/ValidationError'
  *       401:
- *         description: Invalid credentials
+ *         description: Invalid email or password
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error:
+ *                 code: INVALID_CREDENTIALS
+ *                 message: Invalid email or password
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
  */
 router.post('/login', validate(loginSchema), login);
 
@@ -74,24 +115,45 @@ router.post('/login', validate(loginSchema), login);
  * @swagger
  * /auth/refresh:
  *   post:
- *     summary: Refresh access token
+ *     summary: Refresh the access token
+ *     description: |
+ *       Exchanges a valid refresh token for a new access token (and a rotated
+ *       refresh token). The old refresh token is invalidated upon use.
  *     tags: [Authentication]
+ *     security: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required: [refreshToken]
- *             properties:
- *               refreshToken:
- *                 type: string
- *                 example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *             $ref: '#/components/schemas/TokenRequest'
  *     responses:
  *       200:
- *         description: Token refreshed successfully
+ *         description: Token refreshed successfully. Returns a new token pair.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/SuccessResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       $ref: '#/components/schemas/AuthTokens'
+ *       400:
+ *         $ref: '#/components/responses/ValidationError'
  *       401:
- *         description: Invalid refresh token
+ *         description: Refresh token is missing, expired, or has been revoked
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             example:
+ *               success: false
+ *               error:
+ *                 code: INVALID_REFRESH_TOKEN
+ *                 message: Refresh token is invalid or expired
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequests'
  */
 router.post('/refresh', validate(refreshSchema), refresh);
 
@@ -99,22 +161,37 @@ router.post('/refresh', validate(refreshSchema), refresh);
  * @swagger
  * /auth/logout:
  *   post:
- *     summary: User logout
+ *     summary: Invalidate the current session
+ *     description: |
+ *       Revokes the provided refresh token so it can no longer be used to mint
+ *       new access tokens. The caller should also discard the access token
+ *       client-side (it will expire naturally after `expiresIn` seconds).
  *     tags: [Authentication]
+ *     security: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required: [refreshToken]
- *             properties:
- *               refreshToken:
- *                 type: string
- *                 example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *             $ref: '#/components/schemas/TokenRequest'
  *     responses:
  *       200:
- *         description: Logout successful
+ *         description: Logout successful. The refresh token has been revoked.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/SuccessResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       type: object
+ *                       properties:
+ *                         message:
+ *                           type: string
+ *                           example: Logged out successfully
+ *       400:
+ *         $ref: '#/components/responses/ValidationError'
  */
 router.post('/logout', validate(refreshSchema), logout);
 

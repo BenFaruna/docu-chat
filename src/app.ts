@@ -132,8 +132,8 @@ app.get('/api-docs.json', (req, res) => {
 });
 
 
-app.use(healthRoutes)
 app.use('/api/v1', apiLimiter)
+app.use('/api/v1', healthRoutes)
 app.use('/api/v1/auth', authLimiter, authRoutes)
 app.use('/api/v1/admin', adminRoutes)
 app.use('/api/v1/documents', uploadLimiter, documentRoutes)
