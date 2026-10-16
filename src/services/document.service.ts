@@ -36,7 +36,7 @@ export async function createDocument(data: {
   // Queue for background processing
   const jobId = await queueDocumentForProcessing(doc.id, data.userId, data.correlationId);
 
-  appEvents.emit('doc:created', {
+  appEvents.emit(DOC_EVENTS.CREATED, {
     userId: data.userId,
     documentId: doc.id,
     title: doc.title,
