@@ -23,6 +23,7 @@ import './events/auth.event';
 import './events/admin.event';
 import './events/cache.event';
 import './events/document.event';
+import './events/ingestion.event';
 import './events/security.event';
 
 import './queues/document.worker';
